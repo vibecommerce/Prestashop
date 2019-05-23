@@ -1,0 +1,33 @@
+# Adicionando botão de ação personalizada na lista de reprodução do PrestaShop #
+
+Adicionando botão de ação personalizada na lista de reprodução PrestaShop - Podemos facilmente usar os botões 'view', 'edit', 'delete' na lista de renderização Prestashop com a ajuda da função addRowAction ('view'). Mas e se precisarmos adicionar alguns botões personalizados na lista!?
+É possível usando a propriedade 'callback' da lista de campos PrestaShop para o mesmo.
+
+Adicione uma chave de matriz temporária em sua matriz $ this->fields_list:
+CODE:
+$this->fields_list = array(
+   'id_temp' => array(
+        'title' => $this->l('My Button'),
+        'align' =>'text-right',
+        'search' => false,
+        'callback' => 'viewMyButton',
+   ),
+}
+
+
+id_temp é um alias do seu ID de lista, você pode definir isso como (Isto irá criar um botão na lista de renderização semelhante ao View)
+CODE:
+$this->_select = 'a.`id` as `id_temp`';
+
+
+Se você deseja exibir vários botões, é necessário escrever o HTML apenas para isso.
+CODE:
+public function viewMyButton($id)
+{
+    return '<span class="btn-group-action">
+                <span class="btn-group">
+                    <a class="btn btn-default" href="'.self::$currentIndex.'&token='.$this->token.'&view'.$this->table.'&id='.$id.'"><i class="icon-search-plus"></i>&nbsp;'.$this->l('View').'
+                    </a>
+                </span>
+            </span>';
+}
