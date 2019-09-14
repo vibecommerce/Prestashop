@@ -34,7 +34,7 @@
 <p>Você pode desativá-lo no arquivo "classes/cookie.php" dentro da função "isLoggedBack()".</p>
 <p>Aqui, remova ou comente a seguinte condição.</p>
 <p><pre>!Configuration::get('PS_COOKIE_CHECKIP'))</pre></p>
-<h3>5. Aumente o período de inatividade do cookie<h3>
+<h3>5. Aumente o período de inatividade do cookie</h3>
 <p>O período de inatividade é definido como 15 minutos por padrão.<br />
 Você pode aumentar esse valor no arquivo "classes/controller/AdminController.php".</p>
 <p>Procure o código abaixo no arquivo:</p>
