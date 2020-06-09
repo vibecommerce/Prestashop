@@ -1,0 +1,51 @@
+Adicionar coluna no Admin Stock (Gestão de estoque)
+url(../sell/stocks/..)
+
+Neste tutorial, mostrarei como inserir uma coluna a direita do fornecedor do produto.
+Ela conterá o código do fornecedor.
+
+1- Adiciona TH a tabela (JS)
+# Arquivo: admin\themes\new-theme\public\stock.bundle.js
+# Consulta: Linha 256
+n("th",[n("PSSort",{attrs:{order:"supplier","current-sort":t.currentSort},on:{sort:t.sort}},[t._v("\n          "+t._s(t.trans("title_supplier"))+"\n        ")])],1)
+# Add pós consulta:
+n("th",[n("PSSort",{attrs:{order:"supplier","current-sort":t.currentSort},on:{sort:t.sort}},[t._v("\n          "+t._s(t.trans("title_supplier_reference"))+"\n        ")])],1)
+
+2- Adiciona TH a tabela (VUE)
+# Arquivo: admin\themes\new-theme\js\app\pages\stock\components\overview\products-table.vue
+# Consulta: Linha 41
+{{trans('title_supplier')}}
+# Add pós </th> da consulta:
+<th>
+  <PSSort order="supplier" @sort="sort" :current-sort="currentSort">
+    {{trans('title_supplier_reference')}}
+  </PSSort>
+</th>
+
+3- Adiciona label para ser traduzido
+# Arquivo: \src\PrestaShopBundle\Translation\Api\StockApi.php
+# Consulta: Linha 84
+# Add pós consulta
+'title_supplier' => $this->translator->trans('Supplier reference', array(), 'Admin.Global'),
+
+4- Adiciona o TD que vai receber o conteúdo da referência
+# Arquivo: admin\themes\new-theme\public\stock.bundle.js
+# Consulta: Linha 256
+n("td",[t._v("\n    "+t._s(t.product.supplier_name)+"\n  ")])
+# Add pós consulta
+n("td",[t._v("\n    "+t._s(t.product.product_supplier_reference)+"\n  ")])
+
+5- Alimenta o TD inserido no passo anterior
+# Arquivo: \src\PrestaShopBundle\Entity\Repository\StockRepository.php
+
+# Consulta 1: Linha 264
+IF(COALESCE(pa.reference, "") = "", "N/A", pa.reference)                          AS combination_reference,
+
+# Add pós consulta 1:
+IF(COALESCE(psu.product_supplier_reference, "") = "", "N/A", psu.product_supplier_reference)          AS product_supplier_reference,
+
+# Consulta 2: Linha 290
+LEFT JOIN {table_prefix}supplier s ON (p.id_supplier = s.id_supplier)
+# Add pós consulta 2:
+LEFT JOIN {table_prefix}product_supplier psu ON (p.id_product = psu.id_product)
+
